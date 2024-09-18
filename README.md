@@ -1,2 +1,2 @@
-# advent-of-code
-Archive of all Advent of code submissions
+# Advent of Code
+Archive of all Advent of Code submissions for all years.
