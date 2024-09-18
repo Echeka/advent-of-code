@@ -9,17 +9,24 @@ Welcome to GDB Online.
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 
 int convert_to_num(char *string);
+int word_to_num(char *string);
 
 FILE *pfile;
 
+//TODO make a function with a double pointer to parse 3, 4 and 5 letter words sequentially. At each step in the while loop
+//this is evaluated along with the number characters (i.e. 1, 2, 3, etc), to know precedence in the row
+
 int main()
 {
+    
     char digits[2] = {'x', 'x'};
-    int sum_total = 0; //the final answer
-    char tchar;    //temp char while looking for numbers in text
-    int num;    // int to store the number of each row
+    int sum_total = 0;  //the final answer
+    char tchar; //temp char while looking for numbers in text
+    int num;    //int to store the number of each row
+    char words[6];  //stores words for numbers (maximum 5 characters plus de \0)
     
     pfile = fopen("input", "r+");
     
@@ -67,6 +74,8 @@ int main()
     return 0;
 }
 
+/***********************************************************************/
+
 int convert_to_num(char *string) {
     
     int number;
@@ -92,6 +101,30 @@ int convert_to_num(char *string) {
     number = atoi(string);
     
     return (number);
+}
+
+/******************************************************************************/
+
+int word_to_num(char *string) {
+    
+    if (strlen(string) < 3) {   //skip two or less letter words
+        
+        return (-1);
+        
+    }
+    
+    if (!strcmp(string, "one")) {
+        
+        return 1;
+        
+    } else if (strcmp(string, "two")) {
+        
+        return 2;
+        
+    }   //TODO the rest of the numbers
+    
+    return -1;
+    
 }
 
 
