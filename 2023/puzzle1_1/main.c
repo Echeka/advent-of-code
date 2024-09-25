@@ -13,6 +13,7 @@ Welcome to GDB Online.
 
 int convert_to_num(char *string);
 int word_to_num(char *string);
+void assign_to_array(char, char *array);
 
 FILE *pfile;
 
@@ -28,7 +29,7 @@ int main()
     int num;    //int to store the number of each row
     char words[6];  //stores words for numbers (maximum 5 characters plus de \0)
     
-    pfile = fopen("input", "r+");
+    pfile = fopen("input2", "r+");
     
     if (pfile == 0) {
         
@@ -43,15 +44,12 @@ int main()
         
         if (tchar >= '0' && tchar <= '9') {
             
-            if (digits[0] == 'x') {
-                
-                digits[0] = tchar;
-                
-            } else {
-                
-                digits[1] = tchar;
-                
-            }
+            assign_to_array(tchar, digits);
+            
+        } else {    //check if there is a word equal to a number
+        
+            
+            
         }
         
         if (tchar == '\n') {
@@ -105,11 +103,11 @@ int convert_to_num(char *string) {
 
 /******************************************************************************/
 
-int word_to_num(char *string) {
+char word_to_numchar(char *string) {
     
     if (strlen(string) < 3) {   //skip two or less letter words
         
-        return (-1);
+        return 'x';
         
     }
     
@@ -121,10 +119,25 @@ int word_to_num(char *string) {
         
         return 2;
         
-    }   //TODO the rest of the numbers
+    } //TODO rest of words
     
-    return -1;
+    return 'x';
     
+}
+
+/******************************************************************************/
+
+void assign_to_array(char c, char *array) {
+    
+    if (array[0] == 'x') {
+                
+        array[0] = c;
+                
+    } else {
+                
+        array[1] = c;
+                
+    }
 }
 
 
