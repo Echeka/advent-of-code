@@ -14,6 +14,7 @@ Welcome to GDB Online.
 int convert_to_num(char *string);
 int word_to_num(char *string);
 void assign_to_array(char, char *array);
+char substring_eval(char *sub);
 
 FILE *pfile;
 
@@ -48,7 +49,18 @@ int main()
             
         } else {    //check if there is a word equal to a number
         
+            words[0] = tchar;
+        
+            for (int i = 1; i < 5; i++) {
+                
+                words[i] = fgetc(pfile);
+                
+            }
             
+            words[5] ='\0';
+            
+            fseek(pfile, -4, SEEK_CUR); //Return 4 characters to the next before storing
+            printf("%s", words);
             
         }
         
@@ -113,16 +125,43 @@ char word_to_numchar(char *string) {
     
     if (!strcmp(string, "one")) {
         
-        return 1;
+        return '1';
         
-    } else if (strcmp(string, "two")) {
+    } else if (!strcmp(string, "two")) {
         
-        return 2;
+        return '2';
         
-    } //TODO rest of words
+    } else if (!strcmp(string, "three")) {
+        
+        return '3';
+        
+    } else if (!strcmp(string, "four")) {
+        
+        return '4';
+        
+    } else if (!strcmp(string, "five")) {
+        
+        return '5';
+        
+    } else if (!strcmp(string, "six")) {
+        
+        return '6';
+        
+    } else if (!strcmp(string, "seven")) {
+        
+        return '7';
+        
+    } else if (!strcmp(string, "eight")) {
+        
+        return '8';
+        
+    } else if (!strcmp(string, "nine")) {
+        
+        return '9';
+        
+    }
     
     return 'x';
-    
 }
 
 /******************************************************************************/
@@ -138,6 +177,31 @@ void assign_to_array(char c, char *array) {
         array[1] = c;
                 
     }
+}
+
+/******************************************************************************/
+
+char substring_eval(char *sub) {
+    
+    char eval_char;
+    char word[6];
+    
+    //Evaluate substring up to 5 characters long to see if the word corresponds to a number
+    for (int i = 0; i < 5; i++) {
+        
+        word[i] = *(sub+i);
+        word[i+1] = '\0';   //Assign void zero to complete string
+        
+        eval_char = word_to_numchar(word);
+        
+        if (eval_char != 'x') {
+            
+            return eval_char;
+            
+        }
+    }
+    
+    return (eval_char);
 }
 
 
