@@ -14,7 +14,7 @@ Welcome to GDB Online.
 int convert_to_num(char *string);
 int word_to_num(char *string);
 void assign_to_array(char, char *array);
-char substring_eval(char *sub);
+char substring_eval();
 
 FILE *pfile;
 
@@ -26,9 +26,10 @@ int main()
     
     char digits[2] = {'x', 'x'};
     int sum_total = 0;  //the final answer
-    char tchar; //temp char while looking for numbers in text
+    char tchar, ctemp; //temp char while looking for numbers in text
     int num;    //int to store the number of each row
     char words[6];  //stores words for numbers (maximum 5 characters plus de \0)
+    
     
     pfile = fopen("input2", "r+");
     
@@ -48,20 +49,15 @@ int main()
             assign_to_array(tchar, digits);
             
         } else {    //check if there is a word equal to a number
+        //TODO NOT WORKING THE WORD ASSIGNMENT
         
-            words[0] = tchar;
-        
-            for (int i = 1; i < 5; i++) {
+            ctemp = substring_eval();
+            
+            if (ctemp != 'x' && ctemp != '\n') {
                 
-                words[i] = fgetc(pfile);
+                assign_to_array(ctemp, digits);
                 
             }
-            
-            words[5] ='\0';
-            
-            fseek(pfile, -4, SEEK_CUR); //Return 4 characters to the next before storing
-            printf("%s", words);
-            
         }
         
         if (tchar == '\n') {
@@ -181,25 +177,34 @@ void assign_to_array(char c, char *array) {
 
 /******************************************************************************/
 
-char substring_eval(char *sub) {
+char substring_eval() {
     
-    char eval_char;
+    char eval_char, tchar;
     char word[6];
+    int counter = 0;    //counts the number of words before an EOF or \n
+    int i = 0;
     
     //Evaluate substring up to 5 characters long to see if the word corresponds to a number
-    for (int i = 0; i < 5; i++) {
+    while (i < 5) {
+                
+        tchar = fgetc(pfile);
+        counter++;
+        if (tchar == EOF || tchar == '\n') {break;}
         
-        word[i] = *(sub+i);
-        word[i+1] = '\0';   //Assign void zero to complete string
-        
-        eval_char = word_to_numchar(word);
-        
-        if (eval_char != 'x') {
-            
-            return eval_char;
-            
-        }
+        word[i] = tchar;
+        i++;
+                
     }
+            
+    word[i] = '\0';
+            
+    if (tchar != EOF) {
+                
+        fseek(pfile, (counter * -1), SEEK_CUR); //Return the characters moved before EOF or \n
+                
+    }
+    
+    eval_char = word_to_numchar(word);
     
     return (eval_char);
 }
