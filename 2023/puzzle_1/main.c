@@ -14,7 +14,7 @@ Welcome to GDB Online.
 int convert_to_num(char *string);
 int word_to_num(char *string);
 void assign_to_array(char, char *array);
-char substring_eval();
+char substring_eval(char tchar);
 
 FILE *pfile;
 
@@ -31,7 +31,7 @@ int main()
     char words[6];  //stores words for numbers (maximum 5 characters plus de \0)
     
     
-    pfile = fopen("input2", "r+");
+    pfile = fopen("input", "r+");
     
     if (pfile == 0) {
         
@@ -51,7 +51,7 @@ int main()
         } else {    //check if there is a word equal to a number
         //TODO NOT WORKING THE WORD ASSIGNMENT
         
-            ctemp = substring_eval();
+            ctemp = substring_eval(tchar);
             
             if (ctemp != 'x' && ctemp != '\n') {
                 
@@ -177,34 +177,37 @@ void assign_to_array(char c, char *array) {
 
 /******************************************************************************/
 
-char substring_eval() {
+char substring_eval(char tchar) {
     
-    char eval_char, tchar;
+    char eval_char;
     char word[6];
     int counter = 0;    //counts the number of words before an EOF or \n
-    int i = 0;
+    int i = 1;  //it starts at 1 because it receives the first char as a parameter
+    
+    word[0] = tchar;
     
     //Evaluate substring up to 5 characters long to see if the word corresponds to a number
     while (i < 5) {
                 
         tchar = fgetc(pfile);
         counter++;
-        if (tchar == EOF || tchar == '\n') {break;}
+        if (tchar == EOF || tchar == '\n') break;
         
         word[i] = tchar;
         i++;
+        word[i] = '\0';
+        
+        eval_char = word_to_numchar(word);
+        
+        if (eval_char != 'x') break;
                 
     }
-            
-    word[i] = '\0';
             
     if (tchar != EOF) {
                 
         fseek(pfile, (counter * -1), SEEK_CUR); //Return the characters moved before EOF or \n
                 
     }
-    
-    eval_char = word_to_numchar(word);
     
     return (eval_char);
 }
