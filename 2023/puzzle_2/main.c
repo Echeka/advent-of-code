@@ -13,6 +13,8 @@ IDs of those games?
 
 FILE *pfile;
 
+//TODO look for string splitting lib/method
+
 int main()
 {
     
