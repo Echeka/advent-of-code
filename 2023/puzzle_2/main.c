@@ -13,6 +13,8 @@ IDs of those games?
 
 FILE *pfile;
 
+
+
 //TODO look for string splitting lib/method
 
 int main()
@@ -21,6 +23,7 @@ int main()
     int sum = 0;    //the sum of the IDs of possible games
     int num;    //temportal number to store the possible game's IDs
     int qred = qgreen = qblue = 0;  //the quantities of dice extracted each time
+    int nice_games[100]; //stores the numbers of the games that are possible
     
     
     
@@ -41,4 +44,21 @@ int main()
     
 
     return 0;
+}
+
+
+//returns the number of the game if it is possible. Otherwise, returns 0 (false)
+int is_possible() {
+    
+    
+    
+    return 0;
+    
+}
+
+//Searches until it finds a new line escape secuence and
+int* analyze_row(FILE* ptr) {
+    
+    
+    
 }
