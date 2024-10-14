@@ -6,6 +6,7 @@ IDs of those games?
 
 *******************************************************************************/
 #include <stdio.h>
+#include <string.h>
 
 #define RED_CUBES 12
 #define GREEN_CUBES 13
@@ -22,7 +23,8 @@ int main()
     
     int sum = 0;    //the sum of the IDs of possible games
     int num;    //temportal number to store the possible game's IDs
-    int qred = qgreen = qblue = 0;  //the quantities of dice extracted each time
+    int qred, qgreen, qblue;  //the quantities of dice extracted each time
+    qred = qgreen = qblue = 0;
     int nice_games[100]; //stores the numbers of the games that are possible
     
     
@@ -34,6 +36,7 @@ int main()
         printf("File could not be loaded");
         
         return 1;
+        
     }
     
     while (!feof(pfile)) {
@@ -56,9 +59,43 @@ int is_possible() {
     
 }
 
-//Searches until it finds a new line escape secuence and
-int* analyze_row(FILE* ptr) {
+//Searches until it finds a new line escape secuence and returns an array of ints with info
+int* analyze_row() {
+    
+    char c;
+    
+    while (!feof(pfile)){
+        
+        c = fgetc(pfile);
+        
+        
+        
+    }    
+}
+
+
+//gets the game number
+int get_game_number() {
+    
+    char c, cnumber;
+    int ctr = 0;
+    char buffer[25];
+    
+    while (c != ':' && !feof(pfile)) {
+        
+        c = fgetc(ptr);
+        buffer[i] = c;
+        ctr++;
+        
+    }
+    
+    for (int i = 0; i < strlen(buffer); i++) {
+        
+        //TODO define how to get game number
+        
+    }
     
     
+    return -1;
     
 }
