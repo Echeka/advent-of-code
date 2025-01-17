@@ -16,16 +16,21 @@ IDs of those games?
 
 FILE *pfile;
 int sum; //the sum of the IDs of possible games
+int next_free; //the next free position in substring
 
 void parse_text();
 int sum_if_valid(int isValid, int id);
 int evaluate_substring(char *sub);
 void skip_to_eol();
+char add_char(char c, char *sub);
 
+
+//TODO add clear function and add to all functions that need it
 
 int main()
 {
     sum = 0;
+    next_free = 0;
     
     pfile = fopen("input", "r+");
     
@@ -69,9 +74,7 @@ void parse_text() {
             id = 0;
             isValid = TRUE;
             
-        }
-        
-        if (c == ',' || c == ';') {
+        } else if (c == ',' || c == ';') {
             
             isValid = evaluate_substring(substring);
             
@@ -81,6 +84,11 @@ void parse_text() {
                 printf("%d\n", ++count);
                 
             }
+            
+        } else {
+            
+            add_char(c, substring);
+            printf("%s ", substring);
             
         }
         
@@ -108,6 +116,9 @@ int sum_if_valid(int validates, int id) {
 int evaluate_substring(char *sub) {
     
     
+    //clear the substring
+    sub[0] = '\0';
+    next_free = 0;
     
     return FALSE;
     
@@ -132,6 +143,20 @@ void skip_to_eol() {
             
         } 
     }
+}
+
+
+/**
+ * Adds a char to the substring. Returns the char added
+ **/
+
+char add_char(char c, char *sub) {
+    
+    sub[next_free] = c;
+    next_free++;
+    
+    return c;
+    
 }
 
 
