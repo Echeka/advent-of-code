@@ -7,6 +7,8 @@ IDs of those games?
 *******************************************************************************/
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 #define RED_CUBES 12
 #define GREEN_CUBES 13
@@ -17,15 +19,17 @@ IDs of those games?
 FILE *pfile;
 int sum; //the sum of the IDs of possible games
 int next_free; //the next free position in substring
+char substring [15]; //stores parts of the text to analyze for data
 
 void parse_text();
 int sum_if_valid(int isValid, int id);
-int evaluate_substring(char *sub);
+int evaluate_extraction();
+int extract_gameid();
 void skip_to_eol();
-char add_char(char c, char *sub);
+char add_char(char c);
+void clear_substring();
 
 
-//TODO add clear function and add to all functions that need it
 
 int main()
 {
@@ -55,12 +59,8 @@ int main()
 void parse_text() {
     
     char c; //auxiliary character
-    char substring [15]; //stores parts of the text to analyze for data
-    int qred = 0, qgreen = 0, qblue = 0; //the quantities of dice extracted each time
     int id;    //temportal number to store the game's IDs
     int isValid = TRUE; //bool storing if the line is valid. Default to TRUE
-    
-    int count = 0;
     
     while (!feof(pfile)) {
         
@@ -70,25 +70,33 @@ void parse_text() {
             
             sum_if_valid(isValid, id);
             //reset the variables
-            substring[0] = '\0';
+            clear_substring();
             id = 0;
             isValid = TRUE;
             
         } else if (c == ',' || c == ';') {
             
-            isValid = evaluate_substring(substring);
+            isValid = evaluate_extraction();
             
-            if (isValid == FALSE) {
+            clear_substring();
+            
+            if (isValid == FALSE) skip_to_eol();
+            
+        } else if (c == ':') {
+            
+            id = extract_gameid();
+            
+            if (id == 0) {
                 
-                skip_to_eol();
-                printf("%d\n", ++count);
+                break;
                 
             }
             
+            clear_substring();
+            
         } else {
             
-            add_char(c, substring);
-            printf("%s ", substring);
+            add_char(c);
             
         }
         
@@ -113,16 +121,41 @@ int sum_if_valid(int validates, int id) {
  * Returns TRUE if extraction is valid and FALSE otherwise. Also stores id number when found
  **/
 
-int evaluate_substring(char *sub) {
+int evaluate_extraction() {
     
-    
-    //clear the substring
-    sub[0] = '\0';
-    next_free = 0;
+    //TODO functionality of extraction verification
     
     return FALSE;
     
 }
+
+/**
+ * Returns the game id if present in the substring array
+ **/
+ 
+ int extract_gameid() {
+    
+    char c;
+    char number[4] = {'\0'};
+    int counter = 0;
+     
+    for (int i = 0; i < strlen(substring); i++) {
+        
+        c = substring[i];
+        
+        if (isdigit(c)) {
+            
+            number[counter] = c;
+            number[counter + 1] = '\0';
+            counter++;
+            
+        }
+        
+    }
+    
+    return (atoi(number));
+     
+ }
 
 /**
  * Moves the file pointer to the start of the next line
@@ -150,13 +183,27 @@ void skip_to_eol() {
  * Adds a char to the substring. Returns the char added
  **/
 
-char add_char(char c, char *sub) {
+char add_char(char c) {
     
-    sub[next_free] = c;
-    next_free++;
+    if (next_free < 14) { //limit to array size
+        
+        substring[next_free] = c;
+        substring[next_free + 1] = '\0';
+        next_free++;
+        
+    }
     
     return c;
     
 }
+
+void clear_substring() {
+    
+    substring[0] = '\0';
+    next_free = 0;
+    
+}
+
+
 
 
