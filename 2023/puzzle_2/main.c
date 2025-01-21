@@ -22,7 +22,7 @@ int next_free; //the next free position in substring
 char substring [15]; //stores parts of the text to analyze for data
 
 void parse_text();
-int sum_if_valid(int isValid, int id);
+void sum_if_valid(int isValid, int id);
 int evaluate_extraction();
 int extract_gameid();
 void skip_to_eol();
@@ -47,6 +47,7 @@ int main()
     }
     
     parse_text();
+    printf("Output: %d\n", sum);
 
     return 0;
 }
@@ -68,7 +69,9 @@ void parse_text() {
         
         if (c == '\n') {
             
+            if (isValid) printf("+%d ", id);
             sum_if_valid(isValid, id);
+            printf("total: %d\n", sum);
             //reset the variables
             clear_substring();
             id = 0;
@@ -102,6 +105,11 @@ void parse_text() {
         
     }
     
+    //sum the last digit after
+    if (isValid) printf("+%d ", id);
+    sum_if_valid(isValid, id);
+    printf("total: %d\n", sum);
+    
 }
 
 /**
@@ -109,11 +117,9 @@ void parse_text() {
  * Returns the value added.
  **/
 
-int sum_if_valid(int validates, int id) {
+void sum_if_valid(int validates, int id) {
     
     if (validates) sum += id;
-    
-    return id;
     
 }
 
@@ -123,9 +129,37 @@ int sum_if_valid(int validates, int id) {
 
 int evaluate_extraction() {
     
-    //TODO functionality of extraction verification
+    char c;
+    char number[4] = {'\0'};
+    int counter = 0, num;
+    int isValid = FALSE;
     
-    return FALSE;
+    for (int i = 0; i < strlen(substring); i++) {
+        
+        c = substring[i];
+        
+        if (isdigit(c)) {
+            
+            number[counter] = c;
+            number[counter + 1] = '\0';
+            counter++;
+            
+        } else if (c == ' ') {
+            
+            num = atoi(number);
+            
+        } else {
+            
+            if (c == 'b' && num <= BLUE_CUBES) isValid = TRUE;
+            if (c == 'g' && num <= GREEN_CUBES) isValid = TRUE;
+            if (c == 'r' && num <= RED_CUBES) isValid = TRUE;
+            break;
+            
+        }
+        
+    }
+    
+    return (isValid);
     
 }
 
