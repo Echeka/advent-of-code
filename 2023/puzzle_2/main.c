@@ -69,9 +69,9 @@ void parse_text() {
         
         if (c == '\n') {
             
-            if (isValid) printf("+%d ", id);
+            isValid = evaluate_extraction(); //check for the last extraction
+            if (isValid) printf("Game: %d\n", id);
             sum_if_valid(isValid, id);
-            printf("total: %d\n", sum);
             //reset the variables
             clear_substring();
             id = 0;
