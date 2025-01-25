@@ -56,13 +56,25 @@ int parse_line(char *line) {
         
     }
     
+    while ((token = strtok(NULL, DELIMITERS)) != NULL) {
+        
+        
+        
+    }
+    
     //TODO while loop that analyzes if it is a number (then stores the number) (make function)
     //or if it is a word, stores the first character (make function to check)
     //if number and word are valid, they change values of minimum dice
+    //add pointers to ints for cubes to interact with them in parsing function
     
     return (power);
+    
 }
 
+/**
+ * Analyzes a char token??
+ **/
+ 
 
 
 
