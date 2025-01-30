@@ -10,6 +10,8 @@ that are besides each number
 *******************************************************************************/
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 #define BUFF_SIZE 256
 #define TRUE 1
@@ -20,8 +22,10 @@ char buf_up[BUFF_SIZE];
 char buf_mid[BUFF_SIZE];
 char buf_down[BUFF_SIZE];
 int total; //final total sum
+const char DIGITS[] = "0123456789";
 
 void read_line();
+int check_surrounding(int pos);
 
 int main() {
     
@@ -62,12 +66,55 @@ int main() {
  
 void read_line() {
     
-    //TODO get tokens and look for digits
-    //check sorrounding symbols (if each buf[0] != \0)
-    //sum the total
+    char c = '\0';
+    char number[5] = {'\0'};
+    int isValid = FALSE;
+    int current_free = 0;
     
+    for (int i = 0; i < BUFF_SIZE; i++) {
+        
+        c = buf_mid[i];
+        
+        if (isdigit(c)) {
+            
+            number[current_free] = c;
+            number[current_free + 1] = '\0';
+            current_free++;
+            //if not valid, check once more with new position
+            if (!isValid) isValid = check_surrounding(i);
+            
+        } else if (number[0] != '\0') { //after every number, sum if is valid
+            
+            //sum_if_valid(isValid, number);
+            number[0] = '\0';
+            current_free = 0;
+            if (isValid == TRUE) isValid = FALSE;
+            
+        }
+        
+    }
 }
 
 
+/**
+ * Checks for surrounding characters in the passed possition of the mid buffer.
+ * If it is surrouned by at least one symbol other than dot (.), returns true. False otherwise
+ **/
+
+int check_surrounding(int pos) {
+    
+    if (pos > 0)
+        if (buf_mid[pos - 1] != '.' && !isdigit(buf_mid[pos - 1]))
+            return TRUE;
+            
+    if (pos < (BUFF_SIZE - 1))
+        if (buf_mid[pos + 1] != '.' && !isdigit(buf_mid[pos + 1]))
+            return TRUE;
+    
+    //TODO check in other lines
+    
+    return FALSE;
+    
+}
 
 
