@@ -21,11 +21,12 @@ FILE *fis;
 char buf_up[BUFF_SIZE];
 char buf_mid[BUFF_SIZE];
 char buf_down[BUFF_SIZE];
+int buf_length = 0;
 int total; //final total sum
-const char DIGITS[] = "0123456789";
 
 void read_line();
 int check_surrounding(int pos);
+void sum_if_valid(int isValid, int num);
 
 int main() {
     
@@ -38,13 +39,14 @@ int main() {
     
     fgets(buf_mid, BUFF_SIZE, fis);
     fgets(buf_down, BUFF_SIZE, fis);
+    buf_length = strlen(buf_mid);
     
     while (!feof(fis)) {
         
         read_line();
         strcpy(buf_up, buf_mid);
         strcpy(buf_mid, buf_down);
-        if (fgets(buf_down, BUFF_SIZE, fis) == NULL) {
+        if (fgets(buf_down, BUFF_SIZE, fis) == NULL) { //includes \n in the array length
             
             buf_down[0]= '\0';
             
@@ -52,6 +54,7 @@ int main() {
     }
     
     read_line(); //read last line with buf_mid and buf_up
+    printf("Total: %d\n", total);
 
     fclose(fis);
 
@@ -68,10 +71,11 @@ void read_line() {
     
     char c = '\0';
     char number[5] = {'\0'};
+    int integer = 0;
     int isValid = FALSE;
     int current_free = 0;
     
-    for (int i = 0; i < BUFF_SIZE; i++) {
+    for (int i = 0; i < buf_length; i++) {
         
         c = buf_mid[i];
         
@@ -81,14 +85,15 @@ void read_line() {
             number[current_free + 1] = '\0';
             current_free++;
             //if not valid, check once more with new position
-            if (!isValid) isValid = check_surrounding(i);
+            if (isValid == FALSE) isValid = check_surrounding(i);
             
         } else if (number[0] != '\0') { //after every number, sum if is valid
             
-            //sum_if_valid(isValid, number);
+            integer = atoi(number);
+            sum_if_valid(isValid, integer);
             number[0] = '\0';
             current_free = 0;
-            if (isValid == TRUE) isValid = FALSE;
+            isValid = FALSE;
             
         }
         
@@ -103,17 +108,57 @@ void read_line() {
 
 int check_surrounding(int pos) {
     
-    if (pos > 0)
-        if (buf_mid[pos - 1] != '.' && !isdigit(buf_mid[pos - 1]))
+    if (pos > 0) {
+        
+        if (buf_mid[pos - 1] != '.' && !isdigit(buf_mid[pos - 1]) && buf_mid[pos - 1] != '\n')
             return TRUE;
+        //check pos - 1 and pos in other lines
+        if (buf_up[0] != '\0') {
             
-    if (pos < (BUFF_SIZE - 1))
-        if (buf_mid[pos + 1] != '.' && !isdigit(buf_mid[pos + 1]))
+            if (buf_up[pos - 1] != '.' && !isdigit(buf_up[pos - 1]) && buf_up[pos - 1] != '\n')
+                return TRUE;
+            if (buf_up[pos] != '.' && !isdigit(buf_up[pos]) && buf_up[pos] != '\n')
+                return TRUE;
+            
+        }
+        
+        if (buf_down[0] != '\0') {
+            
+            if (buf_down[pos - 1] != '.' && !isdigit(buf_down[pos - 1]) && buf_down[pos - 1] != '\n')
+                return TRUE;
+            if (buf_down[pos] != '.' && !isdigit(buf_down[pos]) && buf_down[pos] != '\n')
+                return TRUE;
+            
+        }
+    }
+            
+    if (pos < (buf_length - 1)) {
+        
+        if (buf_mid[pos + 1] != '.' && !isdigit(buf_mid[pos + 1]) && buf_mid[pos + 1] != '\n')
             return TRUE;
-    
-    //TODO check in other lines
+        //check pos + 1 in other lines
+        if (buf_up[0] != '\0')
+            if (buf_up[pos + 1] != '.' && !isdigit(buf_up[pos + 1]) && buf_up[pos + 1] != '\n')
+                return TRUE;
+
+        if (buf_down[0] != '\0')
+            if (buf_down[pos + 1] != '.' && !isdigit(buf_down[pos + 1]) && buf_down[pos + 1] != '\n')
+                return TRUE;
+        
+    }
     
     return FALSE;
+    
+}
+
+
+/**
+ * Sums the value of the engine part if valid
+ **/
+ 
+void sum_if_valid(int isValid, int num) {
+    
+    if (isValid) total += num;
     
 }
 
